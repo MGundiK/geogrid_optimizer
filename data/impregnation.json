@@ -1,0 +1,138 @@
+{
+  "_description": "Impregnation (apretura) types - FACTORY FORMULA",
+  "_source": "Factory razrada artikla spreadsheets + feedback Feb 2026",
+  "_version": "3.0 - Mar 2026",
+  
+  "_factory_formula_structure": {
+    "coefficients": ["tip_apreture", "nanos_apreture", "brzina_mjerenja (optional)"],
+    "formula": "UKUPNO = tip_apreture × nanos_apreture × brzina_mjerenja",
+    "weight_formula": "weight_impreg = weight_raw × nanos_apreture_ratio",
+    "breaking_force_formula": "F_impreg = F_raw × UKUPNO (no weave efficiency!)",
+    "_note": "Factory does NOT use separate weave efficiency factor"
+  },
+  
+  "_factory_examples": {
+    "AR_460_SBR": {
+      "tip_apreture": {"warp": 1.05, "weft": 1.05},
+      "nanos_apreture": {"warp": 1.05, "weft": 1.25},
+      "UKUPNO": {"warp": 1.103, "weft": 1.313},
+      "nanos_ratio": 1.4
+    },
+    "Carbon_Grid_54_SBR": {
+      "tip_apreture": {"warp": 1.05, "weft": 1.05},
+      "nanos_apreture": {"warp": 1.05, "weft": 1.05},
+      "brzina_mjerenja": {"warp": 1.10, "weft": 1.15},
+      "UKUPNO": {"warp": 1.213, "weft": 1.268},
+      "nanos_ratio": 1.5
+    }
+  },
+  
+  "impregnation_types": {
+    "SBR_latex": {
+      "name": "Akrilat + SBR - latex",
+      "components": [
+        {"name": "Archroma Appretan 9613", "percentage": 80},
+        {"name": "Synthomer Litex S 9076", "percentage": 20}
+      ],
+      "strength_coefficient_type": {
+        "warp": 1.10,
+        "weft": 1.10
+      },
+      "strength_coefficient_application": {
+        "warp": 1.10,
+        "weft": 1.20
+      },
+      "_total_strength_coefficient": {
+        "warp": 1.21,
+        "weft": 1.32
+      },
+      "notes": "Standard latex impregnation for general-purpose grids"
+    },
+    
+    "epoxy": {
+      "name": "Epoxy Resin (High Performance)",
+      "components": [],
+      "strength_coefficient_type": {
+        "warp": 1.50,
+        "weft": 1.50,
+        "_note": "Epoxy provides superior fiber-matrix bonding"
+      },
+      "strength_coefficient_application": {
+        "warp": 1.30,
+        "weft": 1.35,
+        "_note": "Better penetration and load distribution"
+      },
+      "_total_strength_coefficient": {
+        "warp": 1.95,
+        "weft": 2.025,
+        "_note": "Calibrated from Solidian ANTISEISMIC Grid 49/54"
+      },
+      "notes": "High-performance epoxy for structural applications. Total η ≈ 2.0"
+    },
+    
+    "styrene_butadiene": {
+      "name": "Styrene-Butadiene + Filler",
+      "components": [],
+      "_calibration_note": "Calibrated from FLEX GRID products: ARG-240 (14%) η≈1.3, ARG-290 (18%) η≈1.5",
+      "strength_coefficient_type": {
+        "warp": 1.20,
+        "weft": 1.20,
+        "_note": "Higher than SBR-latex due to better polymer matrix"
+      },
+      "strength_coefficient_application": {
+        "warp": 1.15,
+        "weft": 1.20,
+        "_note": "Application-dependent; scales with impregnation %"
+      },
+      "_total_strength_coefficient": {
+        "warp": 1.38,
+        "weft": 1.44,
+        "_note": "Average value; actual η varies from 1.3 (14% impreg) to 1.5 (18%+)"
+      },
+      "notes": "FLEX GRID standard impregnation. Efficiency increases with impregnation percentage."
+    },
+    
+    "epoxy_standard": {
+      "name": "Epoxy Resin (Standard)",
+      "components": [],
+      "strength_coefficient_type": {
+        "warp": 1.25,
+        "weft": 1.25
+      },
+      "strength_coefficient_application": {
+        "warp": 1.15,
+        "weft": 1.20
+      },
+      "_total_strength_coefficient": {
+        "warp": 1.44,
+        "weft": 1.50
+      },
+      "notes": "Standard epoxy, less optimized than high-performance variant"
+    }
+  },
+  
+  "application_parameters": {
+    "_description": "Nanos apreture (application ratio) affects final weight and strength",
+    "typical_application_ratio_percent": {
+      "light": 1.0,
+      "standard": 1.2,
+      "heavy": 1.4,
+      "structural": 1.6
+    },
+    "weight_loss_coefficient": 2.1,
+    "_weight_loss_note": "Utrošak apreture = Težina apreture × 2.1 (loss during application)",
+    
+    "weight_ratio_by_impregnation_percent": {
+      "_note": "Weight ratio = impregnated/raw weight",
+      "16": 1.19,
+      "20": 1.25,
+      "25": 1.33,
+      "30": 1.43
+    }
+  },
+  
+  "weaving_coefficient": {
+    "value": 0.98,
+    "description": "Koeficijent utkivanja - accounts for ~2% material loss during weaving"
+  }
+}

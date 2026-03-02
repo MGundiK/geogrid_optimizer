@@ -1,0 +1,778 @@
+{
+  "_description": "Solidian product database - FACTORY CONFIRMED construction data",
+  "_source": "Factory feedback document (Feb 2026) + CSV + datasheet values",
+  "_version": "3.0 - Mar 2026",
+  
+  "_density_notation_guide": {
+    "warp_format": "A × B × C / 10cm where A=ribs/10cm, B=pairs/rib, C=threads/pair",
+    "weft_format": "A × B / 10cm where A=ribs/10cm, B=strands/rib (NO gore/dolje for weft)",
+    "strands_per_rib_warp": "B × C (pairs × threads_per_pair)",
+    "strands_per_rib_weft": "B",
+    "threads_per_meter": "A × B × C × 10 (warp) or A × B × 10 (weft)",
+    "examples": {
+      "5×2×2": "5 ribs/10cm, 2 pairs/rib, 2 threads/pair = 4 strands/rib, 200 threads/m",
+      "8×1×2": "8 ribs/10cm, 1 pair/rib, 2 threads/pair = 2 strands/rib, 160 threads/m",
+      "15×1": "15 ribs/10cm, 1 strand/rib (weft notation)"
+    }
+  },
+  
+  "_practical_limits": {
+    "strands_per_rib_warp": {"min": 1, "max": 6, "note": "practical limit, can be higher theoretically"},
+    "strands_per_rib_weft": {"min": 1, "max": 3, "note": "practical limit"},
+    "density_grids": {"min": 0.7, "max": 24, "unit": "ribs/10cm"},
+    "density_fabrics": {"min": 15, "max": 160, "unit": "threads/10cm"}
+  },
+  
+  "products": {
+    "ANTISEISMIC_Grid_49": {
+      "product_code": "K1GP00595VK10001",
+      "full_name": "solidian ANTISEISMIC Grid 49-120cmx50m",
+      "weight_g_m2": 385,
+      "impregnation": "epoxy",
+      "impregnation_percent": 25,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "2400 tex", 
+        "density_notation": "2,6 x 2"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 4,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 2.65,
+        "factory_notation": "2.65×2×2",
+        "_source": "BACK-CALCULATED from datasheet: cs_per_rib=1.85, cs_per_m=49.11"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 2.6,
+        "factory_notation": "2.6×2",
+        "_source": "CSV: 2,6 x 2 means 2.6/10cm with 2 strands of 2400 tex"
+      },
+      "datasheet_values": {
+        "mesh_size_warp_mm": 37.6,
+        "mesh_size_weft_mm": 38.4,
+        "fiber_cross_section_mm2": 1.85,
+        "cross_section_per_m_warp_mm2": 49.11,
+        "cross_section_per_m_weft_mm2": 48.0,
+        "breaking_force_warp_kN_m": 103,
+        "breaking_force_weft_kN_m": 99
+      },
+      "_factory_notes": "Needs verification of weft construction and impregnation efficiency"
+    },
+    
+    "ANTISEISMIC_Grid_54": {
+      "product_code": null,
+      "full_name": "solidian ANTISEISMIC Grid 54",
+      "weight_g_m2": 420,
+      "impregnation": "epoxy",
+      "impregnation_percent": 25,
+      "warp": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 4,
+        "total_tex_per_rib": 9600,
+        "density_per_10cm": 1.48,
+        "_source": "BACK-CALCULATED from datasheet: cs_per_rib=3.69, cs_per_m=54.49"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 4,
+        "total_tex_per_rib": 9600,
+        "density_per_10cm": 1.48,
+        "_source": "Assumed symmetric with warp"
+      },
+      "datasheet_values": {
+        "mesh_size_mm": 67.8,
+        "fiber_cross_section_mm2": 3.69,
+        "cross_section_per_m_mm2": 54.49,
+        "breaking_force_warp_kN_m": 100,
+        "breaking_force_weft_kN_m": 96
+      }
+    },
+    
+    "ANTISEISMIC_Grid_185": {
+      "product_code": "K1GP00073VK10001",
+      "full_name": "solidian ANTISEISMIC Grid 185-100cmx50m",
+      "weight_g_m2": 185,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 16,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "1200 tex",
+        "density_notation": "6"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 1200,
+        "density_per_10cm": 6,
+        "factory_notation": "6×1×1",
+        "_source": "Symmetric product - single strand"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 1200,
+        "density_per_10cm": 6,
+        "factory_notation": "6×1"
+      }
+    },
+    
+    "ANTISEISMIC_Grid_250": {
+      "product_code": "K1GP00220VK10001",
+      "full_name": "solidian ANTISEISMIC Grid 250-133cmx50m",
+      "weight_g_m2": 250,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 18,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "1200 tex",
+        "density_notation": "3,973 x 2"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 3.973,
+        "factory_notation": "3.973×1×2",
+        "_source": "Assumed symmetric with weft"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 3.973,
+        "factory_notation": "3.973×2"
+      }
+    },
+    
+    "ANTISEISMIC_Grid_280": {
+      "product_code": "K1GP00059VK10003",
+      "full_name": "solidian ANTISEISMIC Grid 280-100cmx50m",
+      "weight_g_m2": 280,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 20,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "2400 tex",
+        "density_notation": "4"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 4.0,
+        "_source": "BACK-CALCULATED from datasheet: cs_per_rib=0.895, cs_per_m=35.8"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 4.0,
+        "factory_notation": "4×1"
+      },
+      "datasheet_values": {
+        "mesh_size_mm": 25,
+        "cross_section_per_m_mm2": 35.8,
+        "fiber_cross_section_mm2": 0.895
+      }
+    },
+    
+    "ANTISEISMIC_Grid_320": {
+      "product_code": "K1GP00179VK10003",
+      "full_name": "solidian ANTISEISMIC Grid 320-100cmx50m",
+      "weight_g_m2": 320,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 18,
+      "csv_raw": {
+        "osnova": "640 tex",
+        "potka": "2400 tex",
+        "density_notation": "5"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 640,
+        "strands_per_rib": 4,
+        "total_tex_per_rib": 2560,
+        "density_per_10cm": 5.0,
+        "factory_notation": "5×2×2",
+        "threads_per_m": 200,
+        "_source": "FACTORY CONFIRMED: 5×2×2/10cm = 200 niti/m"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 5.0,
+        "factory_notation": "5×1"
+      }
+    },
+    
+    "ANTISEISMIC_Grid_350": {
+      "product_code": "K1GP00531VK10001",
+      "full_name": "solidian ANTISEISMIC Grid 350-100cmx50m",
+      "weight_g_m2": 350,
+      "impregnation": "styrene_butadiene",
+      "csv_raw": {
+        "osnova": "1200 tex + 640 tex",
+        "potka": "2400 tex + 1200 tex",
+        "density_notation": "3,75 + 3,75"
+      },
+      "_note": "COMPLEX: Two different tex values alternating in same direction",
+      "_factory_explanation": {
+        "warp_system_1": "Osnova 1 (640 tex): 3.75 × 2 × 1 = 75 niti/m",
+        "warp_system_2": "Osnova 2 (1200 tex): 3.75 × 2 × 1 = 75 niti/m",
+        "weft_system_1": "Potka 1 (1200 tex): 3.75 × 1 = 37.5 niti/m",
+        "weft_system_2": "Potka 2 (2400 tex): 3.75 × 1 = 37.5 niti/m",
+        "note": "Weft has no 'pairs in bundle' middle term"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "config": "dual_tex",
+        "primary": {
+          "tex": 1200,
+          "strands_per_rib": 2,
+          "density_per_10cm": 3.75,
+          "threads_per_m": 75
+        },
+        "secondary": {
+          "tex": 640,
+          "strands_per_rib": 2,
+          "density_per_10cm": 3.75,
+          "threads_per_m": 75
+        },
+        "combined_threads_per_m": 150,
+        "_source": "FACTORY CONFIRMED"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "config": "dual_tex",
+        "primary": {
+          "tex": 2400,
+          "strands_per_rib": 1,
+          "density_per_10cm": 3.75,
+          "threads_per_m": 37.5
+        },
+        "secondary": {
+          "tex": 1200,
+          "strands_per_rib": 1,
+          "density_per_10cm": 3.75,
+          "threads_per_m": 37.5
+        },
+        "combined_threads_per_m": 75,
+        "_source": "FACTORY CONFIRMED"
+      }
+    },
+    
+    "ANTISEISMIC_Grid_130": {
+      "product_code": "K1GP00028VK10001",
+      "full_name": "solidian ANTISEISMIC Grid 130-100cmx50m",
+      "weight_g_m2": 130,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 14,
+      "csv_raw": {
+        "osnova": "320 tex",
+        "potka": "640 tex",
+        "density_notation": "8"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 320,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 640,
+        "density_per_10cm": 8,
+        "factory_notation": "8×1×2",
+        "threads_per_m": 160,
+        "_source": "FACTORY CONFIRMED: 8×1×2/10cm = 160 niti/m"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 640,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 640,
+        "density_per_10cm": 8,
+        "factory_notation": "8×1"
+      }
+    },
+    
+    "FLEX_GRID_ARG_240_5x5": {
+      "product_code": "K1GP00004VK10001",
+      "full_name": "solidian FLEX GRID-ARG-240-AAS2-5x5",
+      "weight_g_m2": 240,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 14,
+      "csv_raw": {
+        "osnova": "640 tex",
+        "potka": "1200 tex",
+        "density_notation": "15"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 640,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 640,
+        "density_per_10cm": 16,
+        "factory_notation": "16×1×1",
+        "_note": "PES binding thread holds structural thread but doesn't contribute to breaking force"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 15,
+        "factory_notation": "15×2",
+        "_source": "Factory clarified: 2 strands but tex formula uses only primary tex"
+      },
+      "datasheet_values": {
+        "mesh_size_mm": 5
+      }
+    },
+    
+    "FLEX_GRID_ARG_290_8x8": {
+      "product_code": "K1GP00001VK10001",
+      "full_name": "solidian FLEX GRID-ARG-290-AAS2-8x8",
+      "weight_g_m2": 290,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 18,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "1200 tex",
+        "density_notation": "10"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 1200,
+        "density_per_10cm": 10,
+        "factory_notation": "10×1×1"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 1200,
+        "density_per_10cm": 10,
+        "factory_notation": "10×1"
+      },
+      "datasheet_values": {
+        "mesh_size_mm": 8,
+        "breaking_force_warp_kN_m": 50,
+        "breaking_force_weft_kN_m": 50
+      }
+    },
+    
+    "FLEX_GRID_ARG_300_18x18": {
+      "product_code": "K1GP00015VK10001",
+      "full_name": "solidian FLEX GRID-ARG-300-AAS2-18x18",
+      "weight_g_m2": 300,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 18,
+      "csv_raw": {
+        "osnova": "640 tex",
+        "potka": "2400 tex",
+        "density_notation": "5"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 640,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 640,
+        "density_per_10cm": 10,
+        "factory_notation": "10×1×1",
+        "threads_per_m": 100,
+        "_source": "FACTORY CONFIRMED: 10×1×1/10cm = 100 niti/m (corrects our estimate of 4 strands)"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 5,
+        "factory_notation": "5×1"
+      },
+      "_factory_notes": "Needs verification of weft strand count (currently estimated at 1)"
+    },
+    
+    "FLEX_GRID_ARG_330_50x50": {
+      "product_code": "K1GP00016VK10003",
+      "full_name": "solidian FLEX GRID-ARG-330-AAS3-50x50",
+      "weight_g_m2": 330,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 20,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "2400 tex",
+        "density_notation": "1.8"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 6,
+        "total_tex_per_rib": 7200,
+        "density_per_10cm": 1.8,
+        "factory_notation": "1.8×3×2",
+        "threads_per_m": 108,
+        "_source": "FACTORY CONFIRMED: 1.8×3×2/10cm = 108 niti/m"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 1.8,
+        "factory_notation": "1.8×1"
+      }
+    },
+    
+    "FLEX_GRID_ARG_460_AAS3": {
+      "product_code": "K1GP00090VK10013",
+      "full_name": "solidian FLEX GRID-ARG-460-AAS3-25x25",
+      "weight_g_m2": 460,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 40,
+      "csv_raw": {
+        "osnova": "1200 tex + 640 tex",
+        "potka": "2 x 2400 tex",
+        "density_notation": "3.33 x 2"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "secondary_tex": 640,
+        "strands_per_rib": 4,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 3.33,
+        "factory_notation": "3.33×2×2",
+        "threads_per_m": 133.2,
+        "_source": "FACTORY CONFIRMED from razrada artikla"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 3.33,
+        "factory_notation": "3.33×2"
+      },
+      "datasheet_values": {
+        "mesh_size_mm": 30,
+        "fiber_cross_section_mm2": 1.85,
+        "breaking_force_warp_kN_m": 100,
+        "breaking_force_weft_kN_m": 100
+      },
+      "_factory_notes": "Weft should use slightly better coefficient than warp"
+    },
+    
+    "FLEX_GRID_ARG_550_18x16": {
+      "product_code": "K1GP00117VK10027",
+      "full_name": "solidian FLEX GRID-ARG-550-AAS3-18x16",
+      "weight_g_m2": 550,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 21,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "2 x 2400 tex",
+        "density_notation": "4.5"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 4,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 4.5,
+        "factory_notation": "4.5×2×2",
+        "threads_per_m": 180,
+        "_source": "FACTORY CONFIRMED: 4.5×2×2/10cm = 180 niti/m"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 4.5,
+        "factory_notation": "4.5×2"
+      },
+      "datasheet_values": {
+        "mesh_size_mm": 22.2,
+        "breaking_force_warp_kN_m": 90,
+        "breaking_force_weft_kN_m": 90
+      }
+    },
+    
+    "FLEX_GRID_ARG_160_40x40": {
+      "product_code": "K1GP00072VK10005",
+      "full_name": "solidian FLEX GRID-ARG-160-AAS1-40x40",
+      "weight_g_m2": 160,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 16,
+      "csv_raw": {
+        "osnova": "320 tex",
+        "potka": "2400 tex",
+        "density_notation": "2.5"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 320,
+        "strands_per_rib": 6,
+        "total_tex_per_rib": 1920,
+        "density_per_10cm": 2.5,
+        "factory_notation": "2.5×3×2",
+        "threads_per_m": 150,
+        "_source": "FACTORY CONFIRMED: 2.5×3×2/10cm = 150 niti/m (corrects our estimate of 8 strands)"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 2.5,
+        "factory_notation": "2.5×1"
+      }
+    },
+    
+    "FLEX_GRID_ARG_310_35x35": {
+      "product_code": "K1GP00055VK10001",
+      "full_name": "solidian FLEX GRID-ARG-310-AAS3-35x35",
+      "weight_g_m2": 310,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 18,
+      "csv_raw": {
+        "osnova": "640 tex",
+        "potka": "2 x 2400 tex",
+        "density_notation": "2.5"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 640,
+        "strands_per_rib": 6,
+        "total_tex_per_rib": 3840,
+        "density_per_10cm": 2.5,
+        "factory_notation": "2.5×3×2",
+        "threads_per_m": 150,
+        "_source": "FACTORY CONFIRMED: 2.5×3×2/10cm = 150 niti/m (corrects our estimate of 8 strands)"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 2.5,
+        "factory_notation": "2.5×2"
+      }
+    },
+    
+    "FLEX_GRID_ARG_320_8x8_FR": {
+      "product_code": "K1GP00675VK10009",
+      "full_name": "solidian FLEX GRID-ARG-320-AAS3-8x8-FR",
+      "weight_g_m2": 320,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 18,
+      "csv_raw": {
+        "osnova": "1200 tex",
+        "potka": "1200 tex",
+        "density_notation": "10"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 1200,
+        "density_per_10cm": 10,
+        "factory_notation": "10×1×1"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 1200,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 1200,
+        "density_per_10cm": 10,
+        "factory_notation": "10×1"
+      }
+    },
+    
+    "FLEX_GRID_ARG_450_12x12_FR": {
+      "product_code": "K1GP00731VK10003",
+      "full_name": "solidian FLEX GRID-ARG-450-AAS3-12x12-FR",
+      "weight_g_m2": 450,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 20,
+      "csv_raw": {
+        "osnova": "2400 tex",
+        "potka": "2400 tex",
+        "density_notation": "7"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 7,
+        "factory_notation": "7×1×1"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 7,
+        "factory_notation": "7×1"
+      }
+    },
+    
+    "FLEX_GRID_ARG_110_14x12": {
+      "product_code": "K1GP00066VK10001",
+      "full_name": "solidian FLEX GRID-ARG-110-AAS3-14x12",
+      "weight_g_m2": 110,
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 14,
+      "csv_raw": {
+        "osnova": "320 tex",
+        "potka": "640 tex",
+        "density_notation": "7"
+      },
+      "warp": {
+        "material": "AR_glass",
+        "tex": 320,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 640,
+        "density_per_10cm": 7,
+        "factory_notation": "7×1×2",
+        "threads_per_m": 140,
+        "_source": "FACTORY CONFIRMED: 7×1×2/10cm = 140 niti/m"
+      },
+      "weft": {
+        "material": "AR_glass",
+        "tex": 640,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 640,
+        "density_per_10cm": 7,
+        "factory_notation": "7×1"
+      }
+    },
+    
+    "GRID_Q121_RRE_38": {
+      "product_code": "K1GP00746VK10005",
+      "full_name": "solidian GRID Q121-RRE-38",
+      "weight_g_m2": 945,
+      "impregnation": "epoxy",
+      "impregnation_percent": 25,
+      "csv_raw": {
+        "osnova": "4800 tex + 2400 tex",
+        "potka": "4800 tex + 2400 tex",
+        "density_notation": "2,625 x (2+1)"
+      },
+      "_note": "COMPLEX: Mixed tex with (2+1) = 2 strands of 4800 + 1 strand of 2400 = 12000 total",
+      "warp": {
+        "material": "ECR_glass",
+        "tex": 4000,
+        "strands_per_rib": 3,
+        "total_tex_per_rib": 12000,
+        "density_per_10cm": 2.625,
+        "_calculation": "Effective: (2×4800 + 1×2400)/3 = 4000 avg tex × 3 strands"
+      },
+      "weft": {
+        "material": "ECR_glass",
+        "tex": 4000,
+        "strands_per_rib": 3,
+        "total_tex_per_rib": 12000,
+        "density_per_10cm": 2.625,
+        "_calculation": "Same as warp (symmetric)"
+      },
+      "datasheet_values": {
+        "mesh_size_mm": 38,
+        "fiber_cross_section_per_strand_mm2": 4.62,
+        "fiber_cross_section_per_m_mm2": 121,
+        "breaking_force_kN_m": 145
+      }
+    },
+    
+    "Briksy": {
+      "product_code": null,
+      "full_name": "solidian Briksy",
+      "weight_g_m2": 860,
+      "impregnation": "SBR_latex",
+      "impregnation_percent": 16,
+      "warp": {
+        "material": "AR_glass",
+        "tex": 2400,
+        "strands_per_rib": 2,
+        "total_tex_per_rib": 4800,
+        "density_per_10cm": 12.05,
+        "_source": "Estimated from datasheet cross-section"
+      },
+      "weft": {
+        "material": "E_glass",
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "total_tex_per_rib": 2400,
+        "density_per_10cm": 3.0
+      },
+      "datasheet_values": {
+        "mesh_size_warp_mm": 8.3,
+        "mesh_size_weft_mm": 33.3,
+        "fiber_cross_section_warp_mm2": 1.791,
+        "fiber_cross_section_weft_mm2": 0.923,
+        "breaking_force_warp_kN_m": 180,
+        "breaking_force_weft_kN_m": 30
+      },
+      "_factory_notes": "Needs verification of SBR latex efficiency"
+    }
+  },
+  
+  "construction_summary": {
+    "factory_confirmed": [
+      "ANTISEISMIC_Grid_320",
+      "ANTISEISMIC_Grid_130", 
+      "ANTISEISMIC_Grid_350",
+      "FLEX_GRID_ARG_300_18x18",
+      "FLEX_GRID_ARG_330_50x50",
+      "FLEX_GRID_ARG_550_18x16",
+      "FLEX_GRID_ARG_160_40x40",
+      "FLEX_GRID_ARG_310_35x35",
+      "FLEX_GRID_ARG_110_14x12",
+      "FLEX_GRID_ARG_460_AAS3"
+    ],
+    "back_calculated": [
+      "ANTISEISMIC_Grid_49",
+      "ANTISEISMIC_Grid_54",
+      "ANTISEISMIC_Grid_280"
+    ],
+    "assumed_symmetric": [
+      "ANTISEISMIC_Grid_185",
+      "ANTISEISMIC_Grid_250",
+      "FLEX_GRID_ARG_290_8x8",
+      "FLEX_GRID_ARG_320_8x8_FR",
+      "FLEX_GRID_ARG_450_12x12_FR"
+    ],
+    "complex_construction": [
+      "ANTISEISMIC_Grid_350",
+      "GRID_Q121_RRE_38"
+    ],
+    "needs_verification": [
+      "ANTISEISMIC_Grid_49",
+      "FLEX_GRID_ARG_240_5x5",
+      "Briksy"
+    ]
+  },
+  
+  "_factory_notes": {
+    "breaking_force_warning": "Factory states breaking force formulas have never worked well in practice - focus on weight/cross-section first",
+    "weft_coefficient": "Weft should generally use slightly better impregnation coefficient than warp",
+    "binding_thread": "PES binding thread holds structural thread but doesn't contribute to breaking force"
+  }
+}

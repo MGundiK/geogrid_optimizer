@@ -1,0 +1,267 @@
+{
+  "_description": "Material properties - includes both TESTED and DECLARED values",
+  "_source": "breaking_forces_1.csv, breaking_forces_2.csv - Lab testing data + Factory feedback Feb 2026",
+  "_note": "Carbon:AR-glass strength ratio = 2.2:1 (from Solidian testing)",
+  "_version": "3.0 - Mar 2026",
+  
+  "_available_tex_by_material": {
+    "_description": "FACTORY PROVIDED: Standard available tex values by material type",
+    "_source": "Factory feedback document Feb 2026",
+    "stakleni_konac": [34, 68, 110, 136, 204, 272, 408, 544],
+    "direct_roving_E_ECR": [68, 136, 200, 300, 410, 480, 600, 900, 1200, 1800, 2400, 4800, 9600],
+    "direct_roving_AR": [320, 640, 1200, 2400, 4800],
+    "basalt": [300, 600, 1200, 2000, 2200, 2400, 4800],
+    "carbon": [67, 200, 400, 800, 1600, 3200, 3360],
+    "topljiva_nit": [57, 119],
+    "_standard_tex": "highlighted in factory document",
+    "_non_standard_tex": "available but less common"
+  },
+  
+  "_declared_breaking_force": {
+    "_description": "DECLARED breaking force values used by factory in calculations (conservative values)",
+    "_source": "Factory razrada artikla spreadsheet",
+    "_note": "Factory uses these conservative values, then applies impregnation coefficient",
+    
+    "owens_corning_AR": {
+      "320": 144,
+      "640": 256,
+      "1200": 432,
+      "2400": 768,
+      "4800": 1173
+    },
+    "valmiera_konac": {
+      "68": 40,
+      "136": 80,
+      "204": 120,
+      "272": 140,
+      "408": 220,
+      "544": 290
+    },
+    "vetrotex_adfors_konac": {
+      "68": 42,
+      "136": 80,
+      "204": 116,
+      "272": 145,
+      "408": 212,
+      "544": 271
+    },
+    "johns_manville_roving": {
+      "300": 120,
+      "410": 140,
+      "600": 220,
+      "900": 350,
+      "1200": 435,
+      "2400": 845
+    },
+    "carbon_toho_tenax": {
+      "800": 1350,
+      "1600": 2700,
+      "3200": 5400
+    }
+  },
+  
+  "materials": {
+    "AR_glass": {
+      "name": "AR-Glass - Owens Corning (Alkali Resistant)",
+      "supplier": "Owens Corning",
+      "type": "AR direct roving",
+      "density_g_cm3": 2.6,
+      "tensile_strength_mpa": 1100,
+      "e_modulus_gpa": 72,
+      "cost_per_kg": null,
+      "notes": "Calibrated from actual lab testing. Primary material for construction grids."
+    },
+    "E_glass": {
+      "name": "E-Glass - Johns Manville",
+      "supplier": "Johns Manville",
+      "type": "Direct roving",
+      "density_g_cm3": 2.54,
+      "tensile_strength_mpa": 1300,
+      "e_modulus_gpa": 72.4,
+      "cost_per_kg": null,
+      "notes": "Standard glass fiber. Actual values 30-70% higher than declared!"
+    },
+    "E_glass_vetrotex": {
+      "name": "E-Glass - Saint-Gobain Vetrotex (Adfors)",
+      "supplier": "Saint-Gobain Vetrotex / Adfors",
+      "type": "Konac (thread)",
+      "density_g_cm3": 2.54,
+      "tensile_strength_mpa": 1450,
+      "e_modulus_gpa": 72.4,
+      "cost_per_kg": null,
+      "notes": "Thread type (Konac), slightly different from roving"
+    },
+    "E_glass_valmiera": {
+      "name": "E-Glass - Valmiera",
+      "supplier": "Valmiera",
+      "type": "Konac (thread)",
+      "density_g_cm3": 2.54,
+      "tensile_strength_mpa": 1500,
+      "e_modulus_gpa": 72.4,
+      "cost_per_kg": null,
+      "notes": "Thread type (Konac), Baltic supplier"
+    },
+    "carbon": {
+      "name": "Carbon Fiber - Toho Tenax",
+      "supplier": "Toho Tenax",
+      "type": "Carbon fiber",
+      "density_g_cm3": 1.75,
+      "tensile_strength_mpa": 1700,
+      "e_modulus_gpa": 230,
+      "cost_per_kg": null,
+      "notes": "IMPORTANT: Actual values 40-47% LOWER than declared! Use actual tested values."
+    },
+    "basalt": {
+      "name": "Basalt Fiber - Kameenny Vek",
+      "supplier": "Kameenny Vek",
+      "type": "Basalt roving",
+      "density_g_cm3": 2.7,
+      "tensile_strength_mpa": 1100,
+      "e_modulus_gpa": 89,
+      "cost_per_kg": null,
+      "notes": "IMPORTANT: Actual values 18-28% LOWER than declared! Use actual tested values."
+    },
+    "PES": {
+      "name": "Polyester (PES)",
+      "supplier": "Various",
+      "type": "Binding thread",
+      "density_g_cm3": 1.38,
+      "tensile_strength_mpa": 1100,
+      "e_modulus_gpa": 15,
+      "cost_per_kg": null,
+      "notes": "Used for binding threads only, does not contribute to grid strength"
+    },
+    "PP": {
+      "name": "Polypropylene",
+      "supplier": "Various",
+      "type": "Polymer fiber",
+      "density_g_cm3": 0.91,
+      "tensile_strength_mpa": 550,
+      "e_modulus_gpa": 1.5,
+      "cost_per_kg": null,
+      "notes": "Lightweight polymer option for geotextiles"
+    }
+  },
+  
+  "tex_breaking_force": {
+    "_description": "ACTUAL TESTED breaking force (N) per single roving at given tex - from lab measurements",
+    "_important": "These are real measured values, NOT declared/datasheet values",
+    
+    "AR_glass": {
+      "320": 151.9,
+      "640": 266.7,
+      "1200": 481.3,
+      "2400": 775.8,
+      "4800": 1200.0
+    },
+    
+    "E_glass": {
+      "300": 155.1,
+      "410": 202.6,
+      "600": 310.8,
+      "900": 440.6,
+      "1200": 567.9,
+      "2400": 978.4
+    },
+    
+    "E_glass_vetrotex": {
+      "68": 44.5,
+      "136": 77.7,
+      "204": 123.8,
+      "272": 151.5,
+      "408": 212.8,
+      "544": 289.0
+    },
+    
+    "E_glass_valmiera": {
+      "68": 41.8,
+      "136": 84.8,
+      "204": 125.7,
+      "272": 151.7,
+      "408": 230.0,
+      "544": 304.0
+    },
+    
+    "carbon": {
+      "800": 800,
+      "1600": 1520,
+      "3200": 2880
+    },
+    
+    "basalt": {
+      "600": 317,
+      "1200": 493,
+      "2000": 866,
+      "2200": 949,
+      "4800": 1957
+    }
+  },
+  
+  "n_per_tex_ratios": {
+    "_description": "N/tex ratio (breaking force per tex) - useful for interpolation",
+    "AR_glass": {
+      "320": 0.47,
+      "640": 0.42,
+      "1200": 0.40,
+      "2400": 0.32,
+      "4800": 0.25
+    },
+    "E_glass": {
+      "300": 0.52,
+      "410": 0.49,
+      "600": 0.52,
+      "900": 0.49,
+      "1200": 0.47,
+      "2400": 0.41
+    },
+    "carbon": {
+      "800": 1.00,
+      "1600": 0.95,
+      "3200": 0.90
+    },
+    "basalt": {
+      "600": 0.53,
+      "1200": 0.41,
+      "2000": 0.43,
+      "2200": 0.43,
+      "4800": 0.41
+    }
+  },
+  
+  "cross_section_mm2": {
+    "_description": "Cross-sectional area (mm²) at each tex value from testing",
+    "AR_glass": {
+      "320": 0.123,
+      "640": 0.246,
+      "1200": 0.462,
+      "2400": 0.923,
+      "4800": 1.846
+    },
+    "E_glass": {
+      "300": 0.115,
+      "410": 0.158,
+      "600": 0.231,
+      "900": 0.346,
+      "1200": 0.462,
+      "2400": 0.923
+    },
+    "carbon": {
+      "800": 0.452,
+      "1600": 0.904,
+      "3200": 1.808
+    },
+    "basalt": {
+      "600": 0.231,
+      "1200": 0.462,
+      "2000": 0.762,
+      "2200": 0.846,
+      "4800": 1.846
+    }
+  },
+  
+  "strength_ratios": {
+    "_description": "Relative strength ratios between materials (from Solidian testing)",
+    "carbon_to_AR_glass": 2.2,
+    "_note": "At equivalent cross-section, carbon provides 2.2× the breaking force of AR-glass"
+  }
+}

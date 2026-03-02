@@ -1,0 +1,43 @@
+{
+  "_description": "Cost data for geogrid materials and components",
+  "_units": "EUR per kg",
+  "_source": "Estimated market prices - REPLACE WITH ACTUAL SUPPLIER QUOTES",
+  "_note": "These are placeholder values. Update with actual procurement costs.",
+  
+  "fiber_cost_eur_per_kg": {
+    "AR_glass": 2.50,
+    "E_glass": 1.20,
+    "carbon": 25.00,
+    "basalt": 3.50,
+    "ECR_glass": 1.80,
+    "_note": "AR-glass more expensive due to zirconia content; carbon significantly higher"
+  },
+  
+  "impregnation_cost_eur_per_kg": {
+    "SBR_latex": 1.80,
+    "epoxy": 8.50,
+    "styrene_butadiene": 2.20,
+    "epoxy_standard": 6.00,
+    "_note": "Epoxy resins significantly more expensive than latex systems"
+  },
+  
+  "processing_cost_eur_per_m2": {
+    "base": 0.50,
+    "weaving_multiplier": {
+      "LE": 1.0,
+      "DLE": 1.15,
+      "PLE": 0.95
+    },
+    "_note": "Base processing cost plus weave complexity factor"
+  },
+  
+  "example_calculations": {
+    "_description": "Example cost breakdown for Grid 49 type product",
+    "fiber_weight_g_m2": 250,
+    "impreg_weight_g_m2": 85,
+    "fiber_cost": "250g × 2.50 EUR/kg = 0.625 EUR/m²",
+    "impreg_cost": "85g × 8.50 EUR/kg = 0.72 EUR/m²",
+    "processing": "0.50 × 1.15 = 0.575 EUR/m²",
+    "total": "~1.92 EUR/m²"
+  }
+}

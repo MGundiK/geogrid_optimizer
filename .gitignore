@@ -38,10 +38,10 @@ outputs/
 *.log
 
 # data / models
-data/
+
 datasets/
 checkpoints/
-models/
+
 artifacts/
 *.ckpt
 *.pt

@@ -1,0 +1,72 @@
+{
+  "_description": "Weave construction types with efficiency factors",
+  
+  "weave_types": {
+    "LE": {
+      "name": "Half Leno Weave (Gauze)",
+      "croatian_name": "Sukljani vez",
+      "code": "LE",
+      "description": "Two warp systems (osnova 1 & 2) twisting around weft, standard geogrid construction",
+      "eta_warp": 0.95,
+      "eta_weft": 0.92,
+      "weight_factor": 1.0,
+      "binding_thread_required": false,
+      "notes": "Good balance of strength and openness"
+    },
+    
+    "LE2": {
+      "name": "Half Leno Weave Version 2",
+      "croatian_name": "Sukljani vez_ver. 2",
+      "code": "LE2",
+      "description": "Modified leno with binding thread (provezujuća nit)",
+      "eta_warp": 0.93,
+      "eta_weft": 0.90,
+      "weight_factor": 1.02,
+      "binding_thread_required": true,
+      "notes": "Binding thread adds stability but not strength"
+    },
+    
+    "DLE": {
+      "name": "Double Leno Weave",
+      "croatian_name": "Dupli sukljani vez",
+      "code": "DLE",
+      "description": "More complex interlocking pattern with two warp systems",
+      "eta_warp": 0.97,
+      "eta_weft": 0.94,
+      "weight_factor": 1.0,
+      "binding_thread_required": false,
+      "notes": "Higher efficiency due to better load transfer at junctions"
+    },
+    
+    "PLE": {
+      "name": "Plain + Leno Weave",
+      "croatian_name": "Platno + sukljani vez",
+      "code": "PLE",
+      "description": "Hybrid construction with plain weave sections and leno binding",
+      "eta_warp": 0.94,
+      "eta_weft": 0.91,
+      "weight_factor": 1.03,
+      "binding_thread_required": true,
+      "notes": "Combines stability of plain weave with openness of leno"
+    },
+    
+    "PLAIN": {
+      "name": "Plain Weave",
+      "croatian_name": "Platno",
+      "code": "PLAIN",
+      "description": "Simple over-under weave pattern",
+      "eta_warp": 0.85,
+      "eta_weft": 0.85,
+      "weight_factor": 1.0,
+      "binding_thread_required": false,
+      "notes": "Lower efficiency due to crimp, but very stable"
+    }
+  },
+  
+  "binding_thread_defaults": {
+    "material": "PES",
+    "tex": 22,
+    "contributes_to_strength": false,
+    "typical_weight_addition_g_m2": 3.5
+  }
+}

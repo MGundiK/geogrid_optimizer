@@ -1,0 +1,272 @@
+{
+  "_description": "Solidian product database with ACTUAL construction details",
+  "_source": "analysis_KEL_RD_SC_with_different_weft_combination_25-11-2025.csv + Technical datasheets",
+  "_key": "osnova=warp, potka=weft, Broj niti=density per 10cm",
+  
+  "products": {
+    "ANTISEISMIC_Grid_49": {
+      "code": "K1GP00595VK10001",
+      "name": "solidian ANTISEISMIC Grid 49",
+      "material": "AR_glass",
+      "impregnation": "epoxy",
+      "impregnation_percent": 25,
+      "weight_g_m2": 385,
+      "warp": {
+        "tex": 1200,
+        "strands_per_rib": 1,
+        "density_per_10cm": 2.6,
+        "_note": "From datasheet: fiber_cs=1.85mm², cs_per_m=49.11mm²/m"
+      },
+      "weft": {
+        "tex": 2400,
+        "strands_per_rib": 2,
+        "density_per_10cm": 2.6,
+        "_note": "2,6 x 2 means 2.6 ribs/10cm with 2 strands each"
+      },
+      "mesh_size_mm": {"warp": 37.6, "weft": 38.4},
+      "breaking_force_kN_m": {"warp": 103, "weft": 99},
+      "fiber_cross_section_mm2": 1.85
+    },
+    
+    "ANTISEISMIC_Grid_54": {
+      "name": "solidian ANTISEISMIC Grid 54",
+      "material": "AR_glass",
+      "impregnation": "epoxy",
+      "impregnation_percent": 25,
+      "weight_g_m2": 420,
+      "warp": {
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "density_per_10cm": 1.475,
+        "_note": "fiber_cs=3.69mm², 38mm spacing"
+      },
+      "weft": {
+        "tex": 2400,
+        "strands_per_rib": 1,
+        "density_per_10cm": 1.475
+      },
+      "mesh_size_mm": {"warp": 67.8, "weft": 67.8},
+      "breaking_force_kN_m": {"warp": 100, "weft": 96},
+      "fiber_cross_section_mm2": 3.69
+    },
+    
+    "ANTISEISMIC_Grid_185": {
+      "code": "K1GP00073VK10001",
+      "name": "solidian ANTISEISMIC Grid 185",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "weight_g_m2": 185,
+      "warp": {"tex": 1200, "strands_per_rib": 1},
+      "weft": {"tex": 1200, "strands_per_rib": 1, "density_per_10cm": 6},
+      "sc_coefficient": 0.966
+    },
+    
+    "ANTISEISMIC_Grid_280": {
+      "code": "K1GP00059VK10003",
+      "name": "solidian ANTISEISMIC Grid 280",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 20,
+      "weight_g_m2": 280,
+      "warp": {"tex": 1200, "strands_per_rib": 1},
+      "weft": {"tex": 2400, "strands_per_rib": 1, "density_per_10cm": 4},
+      "mesh_size_mm": {"warp": 25.0, "weft": 25.0},
+      "fiber_cross_section_mm2": 0.895,
+      "cross_section_per_m_mm2": 35.8,
+      "breaking_force_kN_m": {"warp_S1": 36, "weft_S1": 40, "warp_S3": 40, "weft_S3": 44},
+      "sc_coefficient": 1.389
+    },
+    
+    "ANTISEISMIC_Grid_350": {
+      "code": "K1GP00531VK10001",
+      "name": "solidian ANTISEISMIC Grid 350",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "weight_g_m2": 350,
+      "warp": {
+        "tex_primary": 1200,
+        "tex_secondary": 640,
+        "_note": "Mixed tex construction"
+      },
+      "weft": {
+        "tex_primary": 2400,
+        "tex_secondary": 1200,
+        "density_per_10cm": 7.5,
+        "_note": "3.75 + 3.75 per 10cm, alternating"
+      },
+      "sc_coefficient": 1.747
+    },
+    
+    "ANTISEISMIC_Grid_250": {
+      "code": "K1GP00220VK10001",
+      "name": "solidian ANTISEISMIC Grid 250",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "weight_g_m2": 250,
+      "warp": {"tex": 1200, "strands_per_rib": 1},
+      "weft": {"tex": 1200, "strands_per_rib": 2, "density_per_10cm": 3.973}
+    },
+    
+    "ANTISEISMIC_Grid_320": {
+      "code": "K1GP00179VK10003",
+      "name": "solidian ANTISEISMIC Grid 320",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "weight_g_m2": 320,
+      "warp": {"tex": 640, "strands_per_rib": 1},
+      "weft": {"tex": 2400, "strands_per_rib": 1, "density_per_10cm": 5}
+    },
+    
+    "ANTISEISMIC_Grid_130": {
+      "code": "K1GP00028VK10001",
+      "name": "solidian ANTISEISMIC Grid 130",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "weight_g_m2": 130,
+      "warp": {"tex": 320, "strands_per_rib": 1},
+      "weft": {"tex": 640, "strands_per_rib": 1, "density_per_10cm": 8}
+    },
+    
+    "FLEX_GRID_240_5x5": {
+      "code": "K1GP00044VK10036",
+      "name": "solidian FLEX GRID-ARG-240-AAS2-5x5",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 14,
+      "weight_g_m2": 248,
+      "warp": {"tex": 640, "strands_per_rib": 1},
+      "weft": {"tex": 640, "strands_per_rib": 1, "density_per_10cm": 15},
+      "mesh_size_mm": {"warp": 6.3, "weft": 6.7},
+      "tensile_strength_N_5cm": {"warp": 3000, "weft": 3000}
+    },
+    
+    "FLEX_GRID_290_8x8": {
+      "code": "K1GP00189VK10001",
+      "name": "solidian FLEX GRID-ARG-290-AAS2-8x8",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 18,
+      "weight_g_m2": 290,
+      "warp": {"tex": 1200, "strands_per_rib": 1},
+      "weft": {"tex": 1200, "strands_per_rib": 1, "density_per_10cm": 10},
+      "mesh_size_mm": {"warp": 10.0, "weft": 10.0},
+      "tensile_strength_N_5cm": {"warp": 3600, "weft": 3600}
+    },
+    
+    "FLEX_GRID_300_18x18": {
+      "code": "K1GP00207VK10003",
+      "name": "solidian FLEX GRID-ARG-300-AAS1-18x18",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 16,
+      "weight_g_m2": 305,
+      "warp": {"tex": 640, "strands_per_rib": 1},
+      "weft": {"tex": 2400, "strands_per_rib": 1, "density_per_10cm": 4.5},
+      "mesh_size_mm": {"warp": 20.0, "weft": 22.2},
+      "tensile_strength_N_5cm": {"warp": 3950, "weft": 3100}
+    },
+    
+    "FLEX_GRID_460_25x25": {
+      "code": "K1GP00068VK10001",
+      "name": "solidian FLEX GRID-ARG-460-AAS3",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 25,
+      "weight_g_m2": 460,
+      "warp": {"tex": 1200, "strands_per_rib": 1},
+      "weft": {"tex": 2400, "strands_per_rib": 2, "density_per_10cm": 3.33},
+      "mesh_size_mm": {"warp": 30.0, "weft": 30.0},
+      "fiber_cross_section_mm2": 1.85,
+      "breaking_force_kN_m": {"warp": 100, "weft": 100}
+    },
+    
+    "FLEX_GRID_550_18x16": {
+      "code": "K1GP00117VK10027",
+      "name": "solidian FLEX GRID-ARG-550-AAS3-18x16",
+      "material": "AR_glass",
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 21,
+      "weight_g_m2": 550,
+      "warp": {"tex": 1200, "strands_per_rib": 1},
+      "weft": {"tex": 2400, "strands_per_rib": 2, "density_per_10cm": 4.5},
+      "mesh_size_mm": {"warp": 22.2, "weft": 22.2},
+      "breaking_force_kN_m": {"warp": 90, "weft": 90}
+    },
+    
+    "GRID_Q121_RRE_38": {
+      "code": "K1GP00746VK10005",
+      "name": "solidian GRID Q121-RRE-38",
+      "material": "ECR_glass",
+      "impregnation": "epoxy",
+      "weight_g_m2": 901,
+      "warp": {
+        "tex_primary": 4800,
+        "tex_secondary": 2400,
+        "_note": "Mixed construction"
+      },
+      "weft": {
+        "tex_primary": 4800,
+        "tex_secondary": 2400,
+        "density_per_10cm": 2.625,
+        "strands_config": "2+1"
+      },
+      "mesh_size_mm": {"warp": 38, "weft": 38},
+      "fiber_cross_section_mm2": 4.62,
+      "cross_section_per_m_mm2": 121,
+      "composite_cross_section_mm2": 10.0,
+      "breaking_force_kN_m": 145,
+      "tensile_strength_MPa": {"fiber": 1600, "composite": 550}
+    },
+    
+    "Briksy": {
+      "name": "solidian Briksy",
+      "material_warp": "AR_glass",
+      "material_weft": "E_glass",
+      "impregnation": "styrene_butadiene",
+      "impregnation_percent": 16,
+      "weight_g_m2": 860,
+      "warp": {
+        "fiber_cross_section_mm2": 1.791,
+        "_note": "Dense warp for load bearing"
+      },
+      "weft": {
+        "fiber_cross_section_mm2": 0.923,
+        "_note": "Sparse weft"
+      },
+      "mesh_size_mm": {"warp": 8.3, "weft": 33.3},
+      "breaking_force_kN_m": {"warp": 180, "weft": 30}
+    }
+  },
+  
+  "construction_patterns": {
+    "_description": "Common patterns observed in Solidian products",
+    "single_tex": {
+      "example": "FLEX GRID 240-5x5",
+      "config": "Same tex for warp and weft",
+      "typical_tex": [320, 640, 1200]
+    },
+    "asymmetric_tex": {
+      "example": "ANTISEISMIC Grid 280",
+      "config": "Different tex for warp vs weft",
+      "common_combos": ["640/2400", "1200/2400", "320/640"]
+    },
+    "multi_strand": {
+      "example": "ANTISEISMIC Grid 49",
+      "config": "Multiple strands per rib in weft",
+      "notation": "density × strands (e.g., 2.6 × 2)"
+    },
+    "mixed_tex": {
+      "example": "ANTISEISMIC Grid 350, GRID Q121",
+      "config": "Alternating tex values in same direction",
+      "notation": "tex1 + tex2 with alternating density"
+    }
+  },
+  
+  "tex_values_used": [320, 640, 1200, 2400, 4800],
+  
+  "typical_densities_per_10cm": {
+    "fine_mesh": "10-15 (5-7mm spacing)",
+    "medium_mesh": "4-6 (15-25mm spacing)",
+    "coarse_mesh": "2-3 (30-50mm spacing)"
+  }
+}
