@@ -1,0 +1,48 @@
+# environments
+.venv/
+venv/
+env/
+ENV/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+build/
+dist/
+
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# notebooks
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# logs / outputs
+logs/
+results/
+outputs/
+*.log
+
+# data / models
+data/
+datasets/
+checkpoints/
+models/
+artifacts/
+*.ckpt
+*.pt
+*.pth

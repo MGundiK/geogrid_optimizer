@@ -1,0 +1,11 @@
+# Geogrid Optimizer Requirements
+# Core functionality uses only Python standard library
+
+# Optional: for visualization and data export
+# matplotlib>=3.5.0
+# pandas>=1.4.0
+# numpy>=1.21.0
+
+# For development/testing
+# pytest>=7.0.0
+# pytest-cov>=3.0.0
