@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Optional, List
 
 # Add parent directory to path for imports when running as script
-if __name__ == '__main__':
-    sys.path.insert(0, str(Path(__file__).parent))
+script_dir = Path(__file__).parent.absolute()
+sys.path.insert(0, str(script_dir))
 
 from models import (
     GridDesign,

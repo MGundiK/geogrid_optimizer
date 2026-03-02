@@ -13,12 +13,14 @@ All products require:
 """
 
 import sys
-import json
+import os
 from pathlib import Path
 from dataclasses import dataclass
 from typing import List, Tuple, Optional
 
-sys.path.insert(0, str(Path(__file__).parent))
+# Fix imports - add parent directory to path
+script_dir = Path(__file__).parent.absolute()
+sys.path.insert(0, str(script_dir))
 
 from models import GridDesign, DirectionConfig
 from models.material import get_material_db
