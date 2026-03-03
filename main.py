@@ -99,6 +99,29 @@ def optimize(args):
         print(f"  {m}: E={props.get('e_modulus_gpa', '?')} GPa, σ={props.get('tensile_mpa', '?')} MPa")
     print()
     
+    # Parse tex values if provided
+    if args.tex_values:
+        tex_values = [float(t.strip()) for t in args.tex_values.split(',')]
+    else:
+        tex_values = [320, 640, 1200, 2400, 4800]  # AR glass standard values
+    
+    # Parse dual-tex pairs if provided (format: "1200+640,2400+1200")
+    dual_tex_pairs = None
+    if args.dual_tex_pairs:
+        args.allow_dual_tex = True  # Implies dual-tex is allowed
+        dual_tex_pairs = []
+        for pair_str in args.dual_tex_pairs.split(','):
+            parts = pair_str.strip().split('+')
+            if len(parts) == 2:
+                dual_tex_pairs.append((float(parts[0]), float(parts[1])))
+        print("=" * 70)
+        print("DUAL-TEX CONFIGURATION")
+        print("=" * 70)
+        print(f"Specified dual-tex pairs:")
+        for p, s in dual_tex_pairs:
+            print(f"  {p:.0f} tex + {s:.0f} tex")
+        print()
+    
     # Set up bounds
     bounds = DesignBounds(
         materials=materials,
@@ -106,14 +129,15 @@ def optimize(args):
         impregnations=['styrene_butadiene', 'epoxy'],
         tex_min=args.tex_min,
         tex_max=args.tex_max,
-        tex_values=[320, 640, 1200, 2400, 4800],  # AR glass standard values
+        tex_values=tex_values,
         strands_min=args.strands_min,
         strands_max=args.strands_max,
         density_min=args.density_min,
         density_max=args.density_max,
         allow_asymmetric=args.allow_asymmetric,
         allow_dual_tex=args.allow_dual_tex,
-        dual_tex_probability=args.dual_tex_prob
+        dual_tex_probability=args.dual_tex_prob,
+        dual_tex_pairs=dual_tex_pairs
     )
     
     # Set up constraints
@@ -134,16 +158,36 @@ def optimize(args):
     
     # Show constraint summary
     print("=" * 70)
-    print("CONSTRAINTS")
+    print("CONSTRAINTS & REQUIREMENTS")
     print("=" * 70)
+    
+    # Material property requirements
+    if args.min_e_modulus or args.min_tensile_mpa:
+        print("Material requirements:")
+        if args.min_e_modulus:
+            print(f"  E modulus ≥ {args.min_e_modulus} GPa ✓ (all selected materials meet this)")
+        if args.min_tensile_mpa:
+            print(f"  Tensile strength ≥ {args.min_tensile_mpa} MPa ✓ (all selected materials meet this)")
+    
+    # Design constraints
+    print("Design constraints:")
     if args.min_strength or args.max_strength:
-        print(f"Breaking force (kN/m): {args.min_strength or 'any'} - {args.max_strength or 'any'}")
+        print(f"  Breaking force (kN/m): {args.min_strength or 'any'} - {args.max_strength or 'any'}")
     if args.min_weight or args.max_weight:
-        print(f"Weight (g/m²): {args.min_weight or 'any'} - {args.max_weight or 'any'}")
+        print(f"  Weight (g/m²): {args.min_weight or 'any'} - {args.max_weight or 'any'}")
     if args.mesh_size:
-        print(f"Mesh size: {args.mesh_size} ± {args.mesh_tolerance} mm")
+        print(f"  Mesh size: {args.mesh_size} ± {args.mesh_tolerance} mm")
+    
+    # Construction options
+    print("Construction options:")
+    print(f"  Asymmetric warp/weft: {'enabled' if args.allow_asymmetric else 'disabled'}")
     if args.allow_dual_tex:
-        print(f"Dual-tex enabled (probability: {args.dual_tex_prob})")
+        if dual_tex_pairs:
+            print(f"  Dual-tex: enabled with specific pairs")
+        else:
+            print(f"  Dual-tex: enabled (random, probability: {args.dual_tex_prob})")
+    else:
+        print(f"  Dual-tex: disabled")
     print()
     
     # Set up objectives
@@ -180,9 +224,16 @@ def optimize(args):
         mesh_weft = design.rib_spacing_mm('weft')
         mat_props = MATERIAL_PROPERTIES.get(design.warp.material_code, {})
         
+        # Check if material requirements are met
+        e_mod = mat_props.get('e_modulus_gpa', 0)
+        tensile = mat_props.get('tensile_mpa', 0)
+        e_ok = "✓" if (not args.min_e_modulus or e_mod >= args.min_e_modulus) else "✗"
+        t_ok = "✓" if (not args.min_tensile_mpa or tensile >= args.min_tensile_mpa) else "✗"
+        
         print(f"\n--- Solution {i+1} ---")
-        print(f"Material: {design.warp.material_code} (E={mat_props.get('e_modulus_gpa', '?')} GPa, "
-              f"σ={mat_props.get('tensile_mpa', '?')} MPa)")
+        print(f"Material: {design.warp.material_code}")
+        print(f"  E modulus: {e_mod} GPa {e_ok}")
+        print(f"  Tensile strength: {tensile} MPa {t_ok}")
         print(f"Mesh Size: {mesh_warp:.1f} × {mesh_weft:.1f} mm")
         print(f"Weight: {design.impregnated_weight_g_m2():.1f} g/m²")
         print(f"Breaking Force (mesh tensile): {design.breaking_force_kN_m('warp'):.1f} / "
@@ -405,6 +456,11 @@ Examples:
                            help='Minimum tex (default: 400)')
     opt_parser.add_argument('--tex-max', type=float, default=5000,
                            help='Maximum tex (default: 5000)')
+    opt_parser.add_argument('--tex-values', default=None,
+                           help='Specific tex values to use, comma-separated (e.g., "320,640,1200,2400")')
+    opt_parser.add_argument('--dual-tex-pairs', default=None,
+                           help='Specific dual-tex pairs to explore, format: "primary+secondary,..." '
+                                '(e.g., "1200+640,2400+1200"). Implies --allow-dual-tex')
     opt_parser.add_argument('--strands-min', type=int, default=1,
                            help='Minimum strands (default: 1)')
     opt_parser.add_argument('--strands-max', type=int, default=6,
