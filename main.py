@@ -57,11 +57,12 @@ def optimize(args):
     """Run multi-objective optimization."""
     # Set up bounds
     bounds = DesignBounds(
-        materials=args.materials.split(',') if args.materials else ['AR_glass', 'carbon', 'basalt'],
-        weaves=args.weaves.split(',') if args.weaves else ['LE', 'DLE', 'PLE'],
-        impregnations=['SBR_latex', 'epoxy'],
+        materials=args.materials.split(',') if args.materials else ['AR_glass'],
+        weaves=args.weaves.split(',') if args.weaves else ['DLE'],
+        impregnations=['styrene_butadiene', 'epoxy'],
         tex_min=args.tex_min,
         tex_max=args.tex_max,
+        tex_values=[320, 640, 1200, 2400, 4800],  # AR glass standard values
         strands_min=args.strands_min,
         strands_max=args.strands_max,
         density_min=args.density_min,
@@ -73,9 +74,16 @@ def optimize(args):
     constraints = Constraints(
         min_breaking_force_warp=args.min_strength,
         min_breaking_force_weft=args.min_strength,
+        max_breaking_force_warp=args.max_strength,
+        max_breaking_force_weft=args.max_strength,
         max_weight=args.max_weight,
+        min_weight=args.min_weight,
         min_aperture_warp=args.min_aperture,
-        min_aperture_weft=args.min_aperture
+        min_aperture_weft=args.min_aperture,
+        max_aperture_warp=args.max_aperture,
+        max_aperture_weft=args.max_aperture,
+        target_mesh_size=args.mesh_size,
+        mesh_size_tolerance=args.mesh_tolerance
     )
     
     # Set up objectives
@@ -98,21 +106,30 @@ def optimize(args):
     print("PARETO-OPTIMAL SOLUTIONS")
     print("=" * 70)
     
+    if not pareto_front:
+        print("\nNo feasible solutions found!")
+        print("Try relaxing constraints or expanding search bounds.")
+        return
+    
     # Sort by first objective (weight)
     pareto_front.sort(key=lambda x: x.objectives[0])
     
     for i, ind in enumerate(pareto_front[:args.max_display]):
         design = ind.design
+        mesh_warp = design.rib_spacing_mm('warp')
+        mesh_weft = design.rib_spacing_mm('weft')
         print(f"\n--- Solution {i+1} ---")
+        print(f"Mesh Size: {mesh_warp:.1f} × {mesh_weft:.1f} mm")
         print(f"Weight: {design.impregnated_weight_g_m2():.1f} g/m²")
         print(f"Breaking Force: {design.breaking_force_kN_m('warp'):.1f} / "
               f"{design.breaking_force_kN_m('weft'):.1f} kN/m (warp/weft)")
-        print(f"Aperture: {design.clear_aperture_mm('warp'):.1f} × "
-              f"{design.clear_aperture_mm('weft'):.1f} mm")
-        print(f"Config: {design.warp.material_code}, "
-              f"tex={design.warp.total_tex_per_rib:.0f}, "
-              f"density={design.warp.density_per_10cm}/10cm, "
-              f"weave={design.weave_code}")
+        print(f"Cross-section/rib: {design.cross_section_per_rib_mm2('warp'):.3f} / "
+              f"{design.cross_section_per_rib_mm2('weft'):.3f} mm²")
+        print(f"Warp: {design.warp.material_code}, {design.warp.tex:.0f} tex × "
+              f"{design.warp.strands_per_rib} strands @ {design.warp.density_per_10cm}/10cm")
+        print(f"Weft: {design.weft.material_code}, {design.weft.tex:.0f} tex × "
+              f"{design.weft.strands_per_rib} strands @ {design.weft.density_per_10cm}/10cm")
+        print(f"Impregnation: {design.impreg_code}")
     
     if len(pareto_front) > args.max_display:
         print(f"\n... and {len(pareto_front) - args.max_display} more solutions")
@@ -285,24 +302,34 @@ Examples:
     opt_parser = subparsers.add_parser('optimize', help='Run multi-objective optimization')
     opt_parser.add_argument('--min-strength', type=float, default=None,
                            help='Minimum breaking force kN/m')
+    opt_parser.add_argument('--max-strength', type=float, default=None,
+                           help='Maximum breaking force kN/m')
     opt_parser.add_argument('--max-weight', type=float, default=None,
                            help='Maximum weight g/m²')
+    opt_parser.add_argument('--min-weight', type=float, default=None,
+                           help='Minimum weight g/m²')
     opt_parser.add_argument('--min-aperture', type=float, default=None,
                            help='Minimum clear aperture mm')
+    opt_parser.add_argument('--max-aperture', type=float, default=None,
+                           help='Maximum clear aperture mm')
+    opt_parser.add_argument('--mesh-size', type=float, default=None,
+                           help='Target mesh size mm (uses ±5mm tolerance)')
+    opt_parser.add_argument('--mesh-tolerance', type=float, default=5.0,
+                           help='Mesh size tolerance mm (default: 5)')
     opt_parser.add_argument('--materials', default=None,
                            help='Comma-separated material codes')
     opt_parser.add_argument('--weaves', default=None,
                            help='Comma-separated weave codes')
     opt_parser.add_argument('--tex-min', type=float, default=400,
                            help='Minimum tex (default: 400)')
-    opt_parser.add_argument('--tex-max', type=float, default=3000,
-                           help='Maximum tex (default: 3000)')
+    opt_parser.add_argument('--tex-max', type=float, default=5000,
+                           help='Maximum tex (default: 5000)')
     opt_parser.add_argument('--strands-min', type=int, default=1,
                            help='Minimum strands (default: 1)')
-    opt_parser.add_argument('--strands-max', type=int, default=10,
-                           help='Maximum strands (default: 10)')
-    opt_parser.add_argument('--density-min', type=float, default=2,
-                           help='Minimum density/10cm (default: 2)')
+    opt_parser.add_argument('--strands-max', type=int, default=6,
+                           help='Maximum strands (default: 6)')
+    opt_parser.add_argument('--density-min', type=float, default=1.5,
+                           help='Minimum density/10cm (default: 1.5)')
     opt_parser.add_argument('--density-max', type=float, default=20,
                            help='Maximum density/10cm (default: 20)')
     opt_parser.add_argument('--allow-asymmetric', action='store_true',
