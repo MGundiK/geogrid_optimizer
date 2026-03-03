@@ -22,23 +22,49 @@ from .impregnation import ImpregnationType, ImpregnationParameters, get_impregna
 
 @dataclass
 class DirectionConfig:
-    """Configuration for one direction (warp or weft) of the grid."""
+    """
+    Configuration for one direction (warp or weft) of the grid.
+    
+    Supports both single-tex and dual-tex constructions:
+    
+    Single-tex example (ARG-460):
+        tex=1200, strands_per_rib=4
+        → 1200 tex × 4 strands = 4800 total tex/rib
+    
+    Dual-tex example (Grid 350 warp):
+        tex=1200, strands_per_rib=2, secondary_tex=640, secondary_strands=2
+        → (1200×2) + (640×2) = 3680 total tex/rib
+        Factory notation: "3.75×2×2 with osnova 1 (640 tex) + osnova 2 (1200 tex)"
+    """
     
     material_code: str
-    tex: float                    # Linear density per strand (g/1000m)
-    strands_per_rib: int          # Number of strands combined in one rib
+    tex: float                    # Primary tex per strand (g/1000m)
+    strands_per_rib: int          # Number of primary strands per rib
     density_per_10cm: float       # Number of ribs per 10cm
     
-    # Optional: secondary tex (for mixed constructions like osnova 1 + osnova 2)
+    # Dual-tex support: secondary tex (for mixed constructions)
     secondary_tex: Optional[float] = None
     secondary_strands: int = 0
+    
+    @property
+    def is_dual_tex(self) -> bool:
+        """Check if this is a dual-tex construction."""
+        return self.secondary_tex is not None and self.secondary_strands > 0
     
     @property
     def total_tex_per_rib(self) -> float:
         """Total tex per rib (sum of all strands)."""
         total = self.tex * self.strands_per_rib
-        if self.secondary_tex and self.secondary_strands > 0:
+        if self.is_dual_tex:
             total += self.secondary_tex * self.secondary_strands
+        return total
+    
+    @property
+    def total_strands_per_rib(self) -> int:
+        """Total number of strands per rib."""
+        total = self.strands_per_rib
+        if self.is_dual_tex:
+            total += self.secondary_strands
         return total
     
     @property
@@ -62,6 +88,28 @@ class DirectionConfig:
         total_tex = self.total_tex_per_rib
         threads_per_m = self.threads_per_meter
         return (total_tex * threads_per_m) / 1000
+    
+    def tex_summary(self) -> str:
+        """Get human-readable tex configuration string."""
+        if self.is_dual_tex:
+            return f"{self.tex:.0f}×{self.strands_per_rib} + {self.secondary_tex:.0f}×{self.secondary_strands}"
+        else:
+            return f"{self.tex:.0f}×{self.strands_per_rib}"
+    
+    def factory_notation(self) -> str:
+        """
+        Get factory-style notation.
+        
+        Format: density × pairs × threads_per_pair / 10cm
+        Example: "3.75×2×2" means 3.75 ribs/10cm, 2 pairs, 2 threads per pair
+        """
+        if self.is_dual_tex:
+            # For dual-tex, show both components
+            pairs = self.strands_per_rib  # Assuming strands = pairs for dual-tex
+            return f"{self.density_per_10cm}×{pairs}×2 (dual: {self.tex:.0f}+{self.secondary_tex:.0f} tex)"
+        else:
+            # Single tex - simplified notation
+            return f"{self.density_per_10cm}×{self.strands_per_rib}"
 
 
 @dataclass

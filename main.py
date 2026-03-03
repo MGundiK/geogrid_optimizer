@@ -55,9 +55,53 @@ def calculate_single(args):
 
 def optimize(args):
     """Run multi-objective optimization."""
+    
+    # Material properties database
+    MATERIAL_PROPERTIES = {
+        'AR_glass': {'e_modulus_gpa': 72.0, 'tensile_mpa': 1100, 'name': 'AR Glass'},
+        'E_glass': {'e_modulus_gpa': 72.4, 'tensile_mpa': 1300, 'name': 'E Glass'},
+        'carbon': {'e_modulus_gpa': 230.0, 'tensile_mpa': 1700, 'name': 'Carbon'},
+        'basalt': {'e_modulus_gpa': 89.0, 'tensile_mpa': 1100, 'name': 'Basalt'},
+    }
+    
+    # Filter materials by E modulus and tensile strength requirements
+    if args.materials:
+        materials = args.materials.split(',')
+    else:
+        materials = list(MATERIAL_PROPERTIES.keys())
+        
+        # Apply E modulus filter
+        if args.min_e_modulus:
+            materials = [m for m in materials 
+                        if MATERIAL_PROPERTIES[m]['e_modulus_gpa'] >= args.min_e_modulus]
+        
+        # Apply tensile strength filter
+        if args.min_tensile_mpa:
+            materials = [m for m in materials 
+                        if MATERIAL_PROPERTIES[m]['tensile_mpa'] >= args.min_tensile_mpa]
+    
+    if not materials:
+        print("ERROR: No materials meet the E modulus/tensile strength requirements!")
+        print("\nAvailable materials:")
+        for code, props in MATERIAL_PROPERTIES.items():
+            print(f"  {code}: E={props['e_modulus_gpa']} GPa, σ={props['tensile_mpa']} MPa")
+        return
+    
+    # Show selected materials
+    print("=" * 70)
+    print("MATERIAL SELECTION")
+    print("=" * 70)
+    if args.min_e_modulus or args.min_tensile_mpa:
+        print(f"Requirements: E ≥ {args.min_e_modulus or 'any'} GPa, σ ≥ {args.min_tensile_mpa or 'any'} MPa")
+    print(f"Selected materials: {', '.join(materials)}")
+    for m in materials:
+        props = MATERIAL_PROPERTIES.get(m, {})
+        print(f"  {m}: E={props.get('e_modulus_gpa', '?')} GPa, σ={props.get('tensile_mpa', '?')} MPa")
+    print()
+    
     # Set up bounds
     bounds = DesignBounds(
-        materials=args.materials.split(',') if args.materials else ['AR_glass'],
+        materials=materials,
         weaves=args.weaves.split(',') if args.weaves else ['DLE'],
         impregnations=['styrene_butadiene', 'epoxy'],
         tex_min=args.tex_min,
@@ -67,7 +111,9 @@ def optimize(args):
         strands_max=args.strands_max,
         density_min=args.density_min,
         density_max=args.density_max,
-        allow_asymmetric=args.allow_asymmetric
+        allow_asymmetric=args.allow_asymmetric,
+        allow_dual_tex=args.allow_dual_tex,
+        dual_tex_probability=args.dual_tex_prob
     )
     
     # Set up constraints
@@ -85,6 +131,20 @@ def optimize(args):
         target_mesh_size=args.mesh_size,
         mesh_size_tolerance=args.mesh_tolerance
     )
+    
+    # Show constraint summary
+    print("=" * 70)
+    print("CONSTRAINTS")
+    print("=" * 70)
+    if args.min_strength or args.max_strength:
+        print(f"Breaking force (kN/m): {args.min_strength or 'any'} - {args.max_strength or 'any'}")
+    if args.min_weight or args.max_weight:
+        print(f"Weight (g/m²): {args.min_weight or 'any'} - {args.max_weight or 'any'}")
+    if args.mesh_size:
+        print(f"Mesh size: {args.mesh_size} ± {args.mesh_tolerance} mm")
+    if args.allow_dual_tex:
+        print(f"Dual-tex enabled (probability: {args.dual_tex_prob})")
+    print()
     
     # Set up objectives
     objectives = ['weight', 'neg_strength_min']  # Minimize weight, maximize min strength
@@ -118,17 +178,34 @@ def optimize(args):
         design = ind.design
         mesh_warp = design.rib_spacing_mm('warp')
         mesh_weft = design.rib_spacing_mm('weft')
+        mat_props = MATERIAL_PROPERTIES.get(design.warp.material_code, {})
+        
         print(f"\n--- Solution {i+1} ---")
+        print(f"Material: {design.warp.material_code} (E={mat_props.get('e_modulus_gpa', '?')} GPa, "
+              f"σ={mat_props.get('tensile_mpa', '?')} MPa)")
         print(f"Mesh Size: {mesh_warp:.1f} × {mesh_weft:.1f} mm")
         print(f"Weight: {design.impregnated_weight_g_m2():.1f} g/m²")
-        print(f"Breaking Force: {design.breaking_force_kN_m('warp'):.1f} / "
+        print(f"Breaking Force (mesh tensile): {design.breaking_force_kN_m('warp'):.1f} / "
               f"{design.breaking_force_kN_m('weft'):.1f} kN/m (warp/weft)")
         print(f"Cross-section/rib: {design.cross_section_per_rib_mm2('warp'):.3f} / "
               f"{design.cross_section_per_rib_mm2('weft'):.3f} mm²")
-        print(f"Warp: {design.warp.material_code}, {design.warp.tex:.0f} tex × "
-              f"{design.warp.strands_per_rib} strands @ {design.warp.density_per_10cm}/10cm")
-        print(f"Weft: {design.weft.material_code}, {design.weft.tex:.0f} tex × "
-              f"{design.weft.strands_per_rib} strands @ {design.weft.density_per_10cm}/10cm")
+        
+        # Show warp configuration (with dual-tex support)
+        warp_tex_str = design.warp.tex_summary()
+        if design.warp.is_dual_tex:
+            print(f"Warp: {warp_tex_str} [DUAL-TEX] @ {design.warp.density_per_10cm}/10cm "
+                  f"(total: {design.warp.total_tex_per_rib:.0f} tex)")
+        else:
+            print(f"Warp: {warp_tex_str} @ {design.warp.density_per_10cm}/10cm")
+        
+        # Show weft configuration (with dual-tex support)
+        weft_tex_str = design.weft.tex_summary()
+        if design.weft.is_dual_tex:
+            print(f"Weft: {weft_tex_str} [DUAL-TEX] @ {design.weft.density_per_10cm}/10cm "
+                  f"(total: {design.weft.total_tex_per_rib:.0f} tex)")
+        else:
+            print(f"Weft: {weft_tex_str} @ {design.weft.density_per_10cm}/10cm")
+        
         print(f"Impregnation: {design.impreg_code}")
     
     if len(pareto_front) > args.max_display:
@@ -301,7 +378,7 @@ Examples:
     # Optimize command
     opt_parser = subparsers.add_parser('optimize', help='Run multi-objective optimization')
     opt_parser.add_argument('--min-strength', type=float, default=None,
-                           help='Minimum breaking force kN/m')
+                           help='Minimum breaking force kN/m (mesh tensile strength)')
     opt_parser.add_argument('--max-strength', type=float, default=None,
                            help='Maximum breaking force kN/m')
     opt_parser.add_argument('--max-weight', type=float, default=None,
@@ -313,11 +390,15 @@ Examples:
     opt_parser.add_argument('--max-aperture', type=float, default=None,
                            help='Maximum clear aperture mm')
     opt_parser.add_argument('--mesh-size', type=float, default=None,
-                           help='Target mesh size mm (uses ±5mm tolerance)')
+                           help='Target mesh size mm (uses ±tolerance)')
     opt_parser.add_argument('--mesh-tolerance', type=float, default=5.0,
                            help='Mesh size tolerance mm (default: 5)')
+    opt_parser.add_argument('--min-e-modulus', type=float, default=None,
+                           help='Minimum E modulus GPa (filters materials)')
+    opt_parser.add_argument('--min-tensile-mpa', type=float, default=None,
+                           help='Minimum material tensile strength MPa')
     opt_parser.add_argument('--materials', default=None,
-                           help='Comma-separated material codes')
+                           help='Comma-separated material codes (overrides E/tensile filters)')
     opt_parser.add_argument('--weaves', default=None,
                            help='Comma-separated weave codes')
     opt_parser.add_argument('--tex-min', type=float, default=400,
@@ -334,6 +415,10 @@ Examples:
                            help='Maximum density/10cm (default: 20)')
     opt_parser.add_argument('--allow-asymmetric', action='store_true',
                            help='Allow asymmetric warp/weft designs')
+    opt_parser.add_argument('--allow-dual-tex', action='store_true',
+                           help='Allow dual-tex constructions (two tex values in same direction, like Grid 350)')
+    opt_parser.add_argument('--dual-tex-prob', type=float, default=0.3,
+                           help='Probability of dual-tex when enabled (default: 0.3)')
     opt_parser.add_argument('--population', type=int, default=100,
                            help='Population size (default: 100)')
     opt_parser.add_argument('--generations', type=int, default=200,

@@ -63,8 +63,15 @@ class DesignBounds:
     application_ratio_min: float = 1.0
     application_ratio_max: float = 1.5
     
-    # Allow asymmetric designs?
+    # Allow asymmetric designs (different warp/weft)?
     allow_asymmetric: bool = True
+    
+    # Allow dual-tex constructions (two tex values in same direction)?
+    # Example: Grid 350 has warp with 1200 tex + 640 tex combined
+    allow_dual_tex: bool = False
+    
+    # Dual-tex probability (when enabled, chance of creating dual-tex design)
+    dual_tex_probability: float = 0.3
 
 
 @dataclass
@@ -349,16 +356,39 @@ class NSGA2Optimizer:
         if not valid_tex:
             valid_tex = self.bounds.tex_values
         
+        # Generate warp configuration
         tex_warp = random.choice(valid_tex)
-        tex_weft = tex_warp if not self.bounds.allow_asymmetric else random.choice(valid_tex)
-        
         strands_warp = random.randint(self.bounds.strands_min, self.bounds.strands_max)
-        strands_weft = strands_warp if not self.bounds.allow_asymmetric else \
-                       random.randint(self.bounds.strands_min, self.bounds.strands_max)
-        
         density_warp = random.uniform(self.bounds.density_min, self.bounds.density_max)
-        density_weft = density_warp if not self.bounds.allow_asymmetric else \
-                       random.uniform(self.bounds.density_min, self.bounds.density_max)
+        
+        # Check for dual-tex warp
+        secondary_tex_warp = None
+        secondary_strands_warp = 0
+        if self.bounds.allow_dual_tex and random.random() < self.bounds.dual_tex_probability:
+            # Select a different tex value for secondary
+            other_tex = [t for t in valid_tex if t != tex_warp]
+            if other_tex:
+                secondary_tex_warp = random.choice(other_tex)
+                secondary_strands_warp = random.randint(1, max(1, strands_warp))
+        
+        # Generate weft configuration
+        if self.bounds.allow_asymmetric:
+            tex_weft = random.choice(valid_tex)
+            strands_weft = random.randint(self.bounds.strands_min, self.bounds.strands_max)
+            density_weft = random.uniform(self.bounds.density_min, self.bounds.density_max)
+        else:
+            tex_weft = tex_warp
+            strands_weft = strands_warp
+            density_weft = density_warp
+        
+        # Check for dual-tex weft
+        secondary_tex_weft = None
+        secondary_strands_weft = 0
+        if self.bounds.allow_dual_tex and random.random() < self.bounds.dual_tex_probability:
+            other_tex = [t for t in valid_tex if t != tex_weft]
+            if other_tex:
+                secondary_tex_weft = random.choice(other_tex)
+                secondary_strands_weft = random.randint(1, max(1, strands_weft))
         
         app_ratio = random.uniform(
             self.bounds.application_ratio_min,
@@ -369,14 +399,18 @@ class NSGA2Optimizer:
             material_code=material,
             tex=tex_warp,
             strands_per_rib=strands_warp,
-            density_per_10cm=round(density_warp, 2)
+            density_per_10cm=round(density_warp, 2),
+            secondary_tex=secondary_tex_warp,
+            secondary_strands=secondary_strands_warp
         )
         
         weft_config = DirectionConfig(
             material_code=material,  # Same material for now
             tex=tex_weft,
             strands_per_rib=strands_weft,
-            density_per_10cm=round(density_weft, 2)
+            density_per_10cm=round(density_weft, 2),
+            secondary_tex=secondary_tex_weft,
+            secondary_strands=secondary_strands_weft
         )
         
         return GridDesign(
@@ -571,11 +605,21 @@ class NSGA2Optimizer:
         
         design = deepcopy(individual.design)
         
-        # Choose what to mutate
-        mutation_type = random.choice([
+        # Build mutation options
+        mutation_options = [
             'tex_warp', 'tex_weft', 'strands_warp', 'strands_weft',
             'density_warp', 'density_weft', 'weave', 'impreg', 'ratio'
-        ])
+        ]
+        
+        # Add dual-tex mutation options if enabled
+        if self.bounds.allow_dual_tex:
+            mutation_options.extend([
+                'secondary_tex_warp', 'secondary_tex_weft',
+                'secondary_strands_warp', 'secondary_strands_weft',
+                'toggle_dual_tex_warp', 'toggle_dual_tex_weft'
+            ])
+        
+        mutation_type = random.choice(mutation_options)
         
         valid_tex = [t for t in self.bounds.tex_values 
                      if self.bounds.tex_min <= t <= self.bounds.tex_max]
@@ -609,6 +653,45 @@ class NSGA2Optimizer:
                 self.bounds.application_ratio_min,
                 self.bounds.application_ratio_max
             ), 2)
+        # Dual-tex mutations
+        elif mutation_type == 'secondary_tex_warp' and valid_tex:
+            if design.warp.is_dual_tex:
+                other_tex = [t for t in valid_tex if t != design.warp.tex]
+                if other_tex:
+                    design.warp.secondary_tex = random.choice(other_tex)
+        elif mutation_type == 'secondary_tex_weft' and valid_tex:
+            if design.weft.is_dual_tex:
+                other_tex = [t for t in valid_tex if t != design.weft.tex]
+                if other_tex:
+                    design.weft.secondary_tex = random.choice(other_tex)
+        elif mutation_type == 'secondary_strands_warp':
+            if design.warp.is_dual_tex:
+                design.warp.secondary_strands = random.randint(1, max(1, design.warp.strands_per_rib))
+        elif mutation_type == 'secondary_strands_weft':
+            if design.weft.is_dual_tex:
+                design.weft.secondary_strands = random.randint(1, max(1, design.weft.strands_per_rib))
+        elif mutation_type == 'toggle_dual_tex_warp':
+            if design.warp.is_dual_tex:
+                # Disable dual-tex
+                design.warp.secondary_tex = None
+                design.warp.secondary_strands = 0
+            else:
+                # Enable dual-tex
+                other_tex = [t for t in valid_tex if t != design.warp.tex]
+                if other_tex:
+                    design.warp.secondary_tex = random.choice(other_tex)
+                    design.warp.secondary_strands = random.randint(1, max(1, design.warp.strands_per_rib))
+        elif mutation_type == 'toggle_dual_tex_weft':
+            if design.weft.is_dual_tex:
+                # Disable dual-tex
+                design.weft.secondary_tex = None
+                design.weft.secondary_strands = 0
+            else:
+                # Enable dual-tex
+                other_tex = [t for t in valid_tex if t != design.weft.tex]
+                if other_tex:
+                    design.weft.secondary_tex = random.choice(other_tex)
+                    design.weft.secondary_strands = random.randint(1, max(1, design.weft.strands_per_rib))
         
         return self._evaluate_individual(design)
     
