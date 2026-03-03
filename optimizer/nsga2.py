@@ -213,16 +213,44 @@ class Constraints:
         ap_warp = design.clear_aperture_mm('warp')
         ap_weft = design.clear_aperture_mm('weft')
         
+        # Breaking force violations (min)
         if self.min_breaking_force_warp and bf_warp < self.min_breaking_force_warp:
             violation += (self.min_breaking_force_warp - bf_warp) ** 2
         if self.min_breaking_force_weft and bf_weft < self.min_breaking_force_weft:
             violation += (self.min_breaking_force_weft - bf_weft) ** 2
+        
+        # Breaking force violations (max)
+        if self.max_breaking_force_warp and bf_warp > self.max_breaking_force_warp:
+            violation += (bf_warp - self.max_breaking_force_warp) ** 2
+        if self.max_breaking_force_weft and bf_weft > self.max_breaking_force_weft:
+            violation += (bf_weft - self.max_breaking_force_weft) ** 2
+        
+        # Weight violations
         if self.max_weight and weight > self.max_weight:
             violation += ((weight - self.max_weight) / 100) ** 2
+        if self.min_weight and weight < self.min_weight:
+            violation += ((self.min_weight - weight) / 100) ** 2
+        
+        # Aperture violations (min)
         if self.min_aperture_warp and ap_warp < self.min_aperture_warp:
             violation += (self.min_aperture_warp - ap_warp) ** 2
         if self.min_aperture_weft and ap_weft < self.min_aperture_weft:
             violation += (self.min_aperture_weft - ap_weft) ** 2
+        
+        # Aperture violations (max)
+        if self.max_aperture_warp and ap_warp > self.max_aperture_warp:
+            violation += (ap_warp - self.max_aperture_warp) ** 2
+        if self.max_aperture_weft and ap_weft > self.max_aperture_weft:
+            violation += (ap_weft - self.max_aperture_weft) ** 2
+        
+        # Mesh size violations
+        if self.target_mesh_size:
+            mesh_warp = design.rib_spacing_mm('warp')
+            mesh_weft = design.rib_spacing_mm('weft')
+            if abs(mesh_warp - self.target_mesh_size) > self.mesh_size_tolerance:
+                violation += ((abs(mesh_warp - self.target_mesh_size) - self.mesh_size_tolerance) / 10) ** 2
+            if abs(mesh_weft - self.target_mesh_size) > self.mesh_size_tolerance:
+                violation += ((abs(mesh_weft - self.target_mesh_size) - self.mesh_size_tolerance) / 10) ** 2
         
         # Tex violations
         if self.max_tex_per_rib:

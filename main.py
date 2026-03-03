@@ -190,8 +190,29 @@ def optimize(args):
         print(f"  Dual-tex: disabled")
     print()
     
-    # Set up objectives
-    objectives = ['weight', 'neg_strength_min']  # Minimize weight, maximize min strength
+    # Set up objectives from CLI
+    objectives = [obj.strip() for obj in args.objectives.split(',')]
+    
+    # Show objectives
+    print("=" * 70)
+    print("OPTIMIZATION OBJECTIVES")
+    print("=" * 70)
+    objective_descriptions = {
+        'weight': 'Minimize weight (g/m²)',
+        'cost': 'Minimize cost (EUR/m²)',
+        'neg_strength_min': 'Maximize minimum strength (kN/m)',
+        'neg_strength_warp': 'Maximize warp strength (kN/m)',
+        'neg_strength_weft': 'Maximize weft strength (kN/m)',
+        'neg_strength_avg': 'Maximize average strength (kN/m)',
+        'neg_aperture': 'Maximize mesh opening (mm)',
+        'neg_strength_to_weight': 'Maximize strength/weight ratio',
+        'total_tex': 'Minimize total tex per rib',
+        'cross_section': 'Minimize fiber cross-section'
+    }
+    for obj in objectives:
+        desc = objective_descriptions.get(obj, f'Unknown: {obj}')
+        print(f"  • {desc}")
+    print()
     
     # Create and run optimizer
     optimizer = NSGA2Optimizer(
@@ -215,10 +236,39 @@ def optimize(args):
         print("Try relaxing constraints or expanding search bounds.")
         return
     
-    # Sort by first objective (weight)
-    pareto_front.sort(key=lambda x: x.objectives[0])
+    # Deduplicate solutions based on key parameters
+    def design_signature(ind):
+        d = ind.design
+        return (
+            d.warp.material_code,
+            round(d.warp.tex, 0),
+            d.warp.strands_per_rib,
+            round(d.warp.density_per_10cm, 1),
+            d.warp.secondary_tex,
+            d.warp.secondary_strands,
+            round(d.weft.tex, 0),
+            d.weft.strands_per_rib,
+            round(d.weft.density_per_10cm, 1),
+            d.weft.secondary_tex,
+            d.weft.secondary_strands,
+            d.impreg_code
+        )
     
-    for i, ind in enumerate(pareto_front[:args.max_display]):
+    seen_signatures = set()
+    unique_solutions = []
+    for ind in pareto_front:
+        sig = design_signature(ind)
+        if sig not in seen_signatures:
+            seen_signatures.add(sig)
+            unique_solutions.append(ind)
+    
+    # Sort by first objective (weight)
+    unique_solutions.sort(key=lambda x: x.objectives[0])
+    
+    print(f"\nTotal solutions: {len(pareto_front)}")
+    print(f"Unique solutions (after deduplication): {len(unique_solutions)}")
+    
+    for i, ind in enumerate(unique_solutions[:args.max_display]):
         design = ind.design
         mesh_warp = design.rib_spacing_mm('warp')
         mesh_weft = design.rib_spacing_mm('weft')
@@ -259,13 +309,97 @@ def optimize(args):
         
         print(f"Impregnation: {design.impreg_code}")
     
-    if len(pareto_front) > args.max_display:
-        print(f"\n... and {len(pareto_front) - args.max_display} more solutions")
+    if len(unique_solutions) > args.max_display:
+        print(f"\n... and {len(unique_solutions) - args.max_display} more unique solutions")
     
     # Export if requested
     if args.output:
-        optimizer.export_results(args.output)
-        print(f"\nResults exported to: {args.output}")
+        import csv
+        
+        # Build export data from deduplicated solutions
+        export_data = []
+        for i, ind in enumerate(unique_solutions):
+            design = ind.design
+            mat_props = MATERIAL_PROPERTIES.get(design.warp.material_code, {})
+            
+            solution = {
+                'id': i + 1,
+                'material': design.warp.material_code,
+                'e_modulus_gpa': mat_props.get('e_modulus_gpa', None),
+                'tensile_strength_mpa': mat_props.get('tensile_mpa', None),
+                'mesh_warp_mm': round(design.rib_spacing_mm('warp'), 1),
+                'mesh_weft_mm': round(design.rib_spacing_mm('weft'), 1),
+                'weight_g_m2': round(design.impregnated_weight_g_m2(), 1),
+                'breaking_force_warp_kn_m': round(design.breaking_force_kN_m('warp'), 1),
+                'breaking_force_weft_kn_m': round(design.breaking_force_kN_m('weft'), 1),
+                'cross_section_warp_mm2': round(design.cross_section_per_rib_mm2('warp'), 3),
+                'cross_section_weft_mm2': round(design.cross_section_per_rib_mm2('weft'), 3),
+                'warp_tex': design.warp.tex,
+                'warp_strands': design.warp.strands_per_rib,
+                'warp_secondary_tex': design.warp.secondary_tex,
+                'warp_secondary_strands': design.warp.secondary_strands,
+                'warp_total_tex': design.warp.total_tex_per_rib,
+                'warp_density_per_10cm': design.warp.density_per_10cm,
+                'warp_is_dual_tex': design.warp.is_dual_tex,
+                'weft_tex': design.weft.tex,
+                'weft_strands': design.weft.strands_per_rib,
+                'weft_secondary_tex': design.weft.secondary_tex,
+                'weft_secondary_strands': design.weft.secondary_strands,
+                'weft_total_tex': design.weft.total_tex_per_rib,
+                'weft_density_per_10cm': design.weft.density_per_10cm,
+                'weft_is_dual_tex': design.weft.is_dual_tex,
+                'impregnation': design.impreg_code,
+                'weave': design.weave_code,
+                # Objectives
+                'objectives': {name: round(val, 2) for name, val in zip(objectives, ind.objectives)}
+            }
+            export_data.append(solution)
+        
+        # Determine base filename
+        base_name = args.output.rsplit('.', 1)[0] if '.' in args.output else args.output
+        
+        # Export JSON
+        if args.output_format in ['json', 'both']:
+            json_file = f"{base_name}.json"
+            with open(json_file, 'w') as f:
+                json.dump({
+                    'metadata': {
+                        'total_solutions': len(pareto_front),
+                        'unique_solutions': len(unique_solutions),
+                        'objectives': objectives,
+                        'constraints': {
+                            'min_strength': args.min_strength,
+                            'max_strength': args.max_strength,
+                            'min_weight': args.min_weight,
+                            'max_weight': args.max_weight,
+                            'mesh_size': args.mesh_size,
+                            'mesh_tolerance': args.mesh_tolerance,
+                            'min_e_modulus': args.min_e_modulus,
+                            'min_tensile_mpa': args.min_tensile_mpa
+                        }
+                    },
+                    'solutions': export_data
+                }, f, indent=2)
+            print(f"\nJSON exported to: {json_file}")
+        
+        # Export CSV
+        if args.output_format in ['csv', 'both']:
+            csv_file = f"{base_name}.csv"
+            # Flatten for CSV (remove nested objectives dict)
+            csv_data = []
+            for sol in export_data:
+                flat_sol = {k: v for k, v in sol.items() if k != 'objectives'}
+                # Add objectives as separate columns
+                for obj_name, obj_val in sol['objectives'].items():
+                    flat_sol[f'objective_{obj_name}'] = obj_val
+                csv_data.append(flat_sol)
+            
+            if csv_data:
+                with open(csv_file, 'w', newline='') as f:
+                    writer = csv.DictWriter(f, fieldnames=csv_data[0].keys())
+                    writer.writeheader()
+                    writer.writerows(csv_data)
+                print(f"CSV exported to: {csv_file}")
 
 
 def list_options(args):
@@ -475,6 +609,11 @@ Examples:
                            help='Allow dual-tex constructions (two tex values in same direction, like Grid 350)')
     opt_parser.add_argument('--dual-tex-prob', type=float, default=0.3,
                            help='Probability of dual-tex when enabled (default: 0.3)')
+    opt_parser.add_argument('--objectives', default='weight,neg_strength_min',
+                           help='Comma-separated objectives to optimize. Options: '
+                                'weight, cost, neg_strength_min, neg_strength_warp, neg_strength_weft, '
+                                'neg_strength_avg, neg_aperture, neg_strength_to_weight, total_tex, '
+                                'cross_section (default: weight,neg_strength_min)')
     opt_parser.add_argument('--population', type=int, default=100,
                            help='Population size (default: 100)')
     opt_parser.add_argument('--generations', type=int, default=200,
@@ -482,7 +621,9 @@ Examples:
     opt_parser.add_argument('--seed', type=int, default=None,
                            help='Random seed for reproducibility')
     opt_parser.add_argument('--output', '-o', default=None,
-                           help='Output JSON file for results')
+                           help='Output file for results (.json or .csv)')
+    opt_parser.add_argument('--output-format', choices=['json', 'csv', 'both'], default='json',
+                           help='Output format: json, csv, or both (default: json)')
     opt_parser.add_argument('--max-display', type=int, default=10,
                            help='Max solutions to display (default: 10)')
     opt_parser.add_argument('--quiet', '-q', action='store_true',
